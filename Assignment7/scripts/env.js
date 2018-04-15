@@ -12,6 +12,12 @@ var exports = {};
 function createNum(n) {
     return ["Num",n];
 }
+function createBool(n) {
+    return ["Bool", n];
+}
+function isBool(value) {
+    return value[0] === "Bool";
+}
 function isNum(value) {
     return value[0] === "Num";
 }
@@ -21,6 +27,15 @@ function getNumValue(value) {
     } else {
 	throw new Error("Interpreter error: "  +
 			"The argument of getNumValue is not a Num value.");
+    }
+}
+function getBoolValue(value) {
+    if(isBool(value)) {
+      return value[1];
+    }
+    else {
+      throw new Error("Interpreter error: "  +
+        "The argument of getBoolValue is not a Bool value.");
     }
 }
 function createList(l) {
@@ -96,7 +111,7 @@ function getEnvEnv (env) {
 	return env[2];
     } else {
 	throw new Error("Interpreter error: "  +
-			"The argument of getEnvEnv is not an environment.");	
+			"The argument of getEnvEnv is not an environment.");
     }
 }
 
@@ -133,6 +148,7 @@ function toString(e) {
     return JSON.stringify(e);
 }
 exports.createNum = createNum;
+exports.createBool = createBool;
 exports.isNum = isNum;
 exports.getNumValue = getNumValue;
 exports.createClo = createClo;
@@ -154,6 +170,8 @@ exports.toString = toString;
 exports.createList = createList;
 exports.isList = isList;
 exports.getListValue = getListValue;
+exports.isBool = isBool;
+exports.getBoolValue = getBoolValue;
 
 
 window.SLang.env = exports;

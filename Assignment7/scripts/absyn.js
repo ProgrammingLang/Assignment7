@@ -7,26 +7,26 @@
 var exports = {};
 
 function createProgram(e) {
-    return ["Program", e]; 
+    return ["Program", e];
 }
-function isProgram(e) { 
-    return e[0] === "Program"; 
+function isProgram(e) {
+    return e[0] === "Program";
 }
-function getProgramExp(e) { 
+function getProgramExp(e) {
     if (isProgram(e)) {
 	return e[1];
     } else {
 	throw new Error("Interpreter error: "  +
 			"The argument of getProgramExp is not a program.");
     }
-}				       
-function createVarExp(v) { 
-    return ["VarExp", v]; 
 }
-function isVarExp(e) { 
-    return e[0] === "VarExp"; 
+function createVarExp(v) {
+    return ["VarExp", v];
 }
-function getVarExpId(e) { 
+function isVarExp(e) {
+    return e[0] === "VarExp";
+}
+function getVarExpId(e) {
     if (isVarExp(e)) {
 	return e[1];
     } else {
@@ -37,10 +37,10 @@ function getVarExpId(e) {
 function createIntExp(n) {
     return ["IntExp", parseInt(n)];
 }
-function isIntExp(e) { 
-    return e[0] === "IntExp"; 
+function isIntExp(e) {
+    return e[0] === "IntExp";
 }
-function getIntExpValue(e) { 
+function getIntExpValue(e) {
     if (isIntExp(e)) {
 	return e[1];
     } else {
@@ -51,10 +51,10 @@ function getIntExpValue(e) {
 function createFnExp(params,body) {
     return ["FnExp",params,body];
 }
-function isFnExp(e) { 
-    return e[0] === "FnExp"; 
+function isFnExp(e) {
+    return e[0] === "FnExp";
 }
-function getFnExpParams(e) { 
+function getFnExpParams(e) {
     if (isFnExp(e)) {
 	return e[1];
     } else {
@@ -62,7 +62,7 @@ function getFnExpParams(e) {
 			"The argument of getFnExpParams is not an FnExp.");
     }
 }
-function getFnExpBody(e) { 
+function getFnExpBody(e) {
     if (isFnExp(e)) {
 	return e[2];
     } else {
@@ -73,10 +73,10 @@ function getFnExpBody(e) {
 function createAppExp(fn,args) {
     return ["AppExp",fn,args];
 }
-function isAppExp(e) { 
-    return e[0] === "AppExp"; 
+function isAppExp(e) {
+    return e[0] === "AppExp";
 }
-function getAppExpFn(e) { 
+function getAppExpFn(e) {
     if (isAppExp(e)) {
 	return e[1];
     } else {
@@ -84,7 +84,7 @@ function getAppExpFn(e) {
 			"The argument of getAppExpFn is not an AppExp.");
     }
 }
-function getAppExpArgs(e) { 
+function getAppExpArgs(e) {
     if (isAppExp(e)) {
 	return e[2].slice(1); // eliminate the first element (i.e., "args")
     } else {
@@ -95,10 +95,10 @@ function getAppExpArgs(e) {
 function createPrim1AppExp(prim,arg) {
     return ["Prim1AppExp",prim,arg];
 }
-function isPrim1AppExp(e) { 
-    return e[0] === "Prim1AppExp"; 
+function isPrim1AppExp(e) {
+    return e[0] === "Prim1AppExp";
 }
-function getPrim1AppExpPrim(e) { 
+function getPrim1AppExpPrim(e) {
     if (isPrim1AppExp(e)) {
 	return e[1];
     } else {
@@ -106,7 +106,7 @@ function getPrim1AppExpPrim(e) {
 			"The argument of getPrim1AppExpPrim is not a Prim1AppExp.");
     }
 }
-function getPrim1AppExpArg(e) { 
+function getPrim1AppExpArg(e) {
     if (isPrim1AppExp(e)) {
 	return e[2];
     } else {
@@ -117,10 +117,10 @@ function getPrim1AppExpArg(e) {
 function createPrim2AppExp(prim,arg1,arg2) {
     return ["Prim2AppExp",prim,arg1,arg2];
 }
-function isPrim2AppExp(e) { 
-    return e[0] === "Prim2AppExp"; 
+function isPrim2AppExp(e) {
+    return e[0] === "Prim2AppExp";
 }
-function getPrim2AppExpPrim(e) { 
+function getPrim2AppExpPrim(e) {
     if (isPrim2AppExp(e)) {
 	return e[1];
     } else {
@@ -128,7 +128,7 @@ function getPrim2AppExpPrim(e) {
 			"The argument of getPrim2AppExpPrim is not a Prim2AppExp.");
     }
 }
-function getPrim2AppExpArg1(e) { 
+function getPrim2AppExpArg1(e) {
     if (isPrim2AppExp(e)) {
 	return e[2];
     } else {
@@ -136,7 +136,7 @@ function getPrim2AppExpArg1(e) {
 			"The argument of getPrim2AppExpArg is not a Prim2AppExp.");
     }
 }
-function getPrim2AppExpArg2(e) { 
+function getPrim2AppExpArg2(e) {
     if (isPrim2AppExp(e)) {
 	return e[3];
     } else {
@@ -145,13 +145,56 @@ function getPrim2AppExpArg2(e) {
     }
 }
 
+function createIfExp(prim, boolExp, thenExp, elseExp){
+  return ["IfExp", prim, boolExp, thenExp, elseExp];
+}
+function isIfExp(e){
+  return e[0] === "IfExp";
+}
+function getIfExp(e) {
+  if(isIfExp(e)){
+    return e[1];
+  }
+  else {
+    throw new Error("Interpreter error: " +
+        "The argument of getIfExp is not a IfExp.");
+  }
+}
+function getIfExpBoolExp(e) {
+  if(isIfExp(e)){
+    return e[2];
+  }
+  else {
+    throw new Error("Interpreter error: "  +
+  			"The argument of ifExp is not a IfExp.");
+  }
+}
+function getifExpThenExp(e) {
+  if(isIfExp(e)){
+    return e[3];
+  }
+  else {
+    throw new Error("Interpreter error: "  +
+  			"The argument of ifExp is not a IfExp.");
+  }
+}
+function getIfExpElseExp(e) {
+  if(isIfExp(e)){
+    return e[4];
+  }
+  else {
+    throw new Error("Interpreter error: "  +
+  			"The argument of ifExp is not a IfExp.");
+  }
+}
+
 function createListExp(list) {
     return ["ListExp",list];
 }
-function isListExp(e) { 
-    return e[0] === "ListExp"; 
+function isListExp(e) {
+    return e[0] === "ListExp";
 }
-function getListExpList(e) { 
+function getListExpList(e) {
     if (isListExp(e)) {
 	return e[1];
     } else {
@@ -189,6 +232,12 @@ exports.getPrim2AppExpArg2 = getPrim2AppExpArg2;
 exports.createListExp = createListExp;
 exports.isListExp = isListExp;
 exports.getListExpList = getListExpList;
+exports.createIfExp = createIfExp;
+exports.isIfExp = isIfExp;
+exports.getIfExp = getIfExp;
+exports.getIfExpBoolExp = getIfExpBoolExp;
+exports.getifExpThenExp = getifExpThenExp;
+exports.getIfExpElseExp = getIfExpElseExp;
 
 window.SLang.absyn = exports;
 }());

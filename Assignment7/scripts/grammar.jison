@@ -14,18 +14,30 @@ LETTER		      [a-zA-Z]
 ")"                   		      { return 'RPAREN'; }
 "+"                   		      { return 'PLUS'; }
 "*"                   		      { return 'TIMES'; }
-"subtract"                             { return 'MINUS'; }
-"add1"                                { return 'ADD1'; }
+"-"                             { return 'MINUS'; }
+"add1"                          { return 'ADD1'; }
 "from"                          { return 'FROM'; }
 ","                   		      { return 'COMMA'; }
+"~"                             { return 'NEGATIVE'; }
 "=>"                   		      { return 'THATRETURNS'; }
-"["                                   { return 'LBRACKET'; }
-"]"                                   { return 'RBRACKET'; }
+"["                             { return 'LBRACKET'; }
+"]"                             { return 'RBRACKET'; }
+"/"                             { return 'DIVIDE'; }
+"==="                           { return 'BOOLEQ'; }
+"%"                             { return 'MOD'; }
+">"                             { return 'GT'; }
+"<"                             { return 'LT'; }
+"sumlist"                       { return 'SUMLIST'; }
+"not"                           { return 'NOT'; }
+"if"                            { return 'IF'; }
+"then"                          { return 'THEN'; }
+"else"                          { return 'ELSE'; }
 <<EOF>>               		      { return 'EOF'; }
 {LETTER}({LETTER}|{DIGIT}|_)*  	      { return 'VAR'; }
 {DIGIT}+                              { return 'INT'; }
 .                     		      { return 'INVALID'; }
-"sumlist"                       { return 'SUMLIST'; }
+
+
 
 
 /lex
@@ -47,6 +59,7 @@ exp
     | prim1_app_exp { $$ = $1; }
     | prim2_app_exp { $$ = $1; }
     | list_exp      { $$ = $1; }
+    | if_exp        { $$ = $; }
     ;
 
 var_exp
@@ -94,24 +107,35 @@ prim1_app_exp
        { $$ = SLang.absyn.createPrim1AppExp($1,$3); }
     | SUMLIST LPAREN list_exp RPAREN
         { $$ = SLang.absyn.createPrim1AppExp("+", $3); }
+    | NOT LPAREN exp RPAREN
+        { $$ = SLang.absyn.createPrim1AppExp("not", $3); }
     ;
 
 prim2_app_exp
-    : prim2_op LPAREN exp COMMA exp RPAREN
-       { $$ = SLang.absyn.createPrim2AppExp($1,$3,$5); }
-    | MINUS exp FROM exp
-        { $$ = SLang.absyn.createPrim2AppExp("-",$2,$4); }
+    : LPAREN exp prim2_op exp RPAREN
+       { $$ = SLang.absyn.createPrim2AppExp($3,$2,$4); }
     ;
 
 prim1_op
     :  ADD1     { $$ = $1; }
+    |  NEGATIVE { $$ = $1; }
     ;
 
 prim2_op
     :  PLUS     { $$ = $1; }
     |  TIMES    { $$ = $1; }
+    |  MINUS    { $$ = $1; }
+    |  MOD      { $$ = $1; }
+    |  DIVIDE   { $$ = $1; }
+    |  BOOLEQ   { $$ = $1; }
+    |  GT       { $$ = $1; }
+    |  LT       { $$ = $1; }
     ;
 
+if_exp
+    :  IF exp THEN exp ELSE exp
+        { $$ = SLang.absyn.createIfExp("if",$2, $4, $6); }
+    ;
 args
     : /* empty */ { $$ = [ ]; }
     | exp args
