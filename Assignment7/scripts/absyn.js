@@ -146,13 +146,12 @@ function getPrim2AppExpArg2(e) {
 }
 
 function createIfExp(prim, boolExp, thenExp, elseExp){
-  //console.log(["IfExp", prim, boolExp, thenExp, elseExp]);
   return ["IfExp",prim,boolExp,thenExp,elseExp];
 }
 function isIfExp(e){
-  console.log(e[0]);
   return e[0] === "IfExp";
 }
+
 function getIfExp(e) {
   if(isIfExp(e)){
     return e[1];
@@ -171,7 +170,7 @@ function getIfExpBoolExp(e) {
   			"The argument of ifExp is not a IfExp.");
   }
 }
-function getifExpThenExp(e) {
+function getIfExpThenExp(e) {
   if(isIfExp(e)){
     return e[3];
   }
@@ -238,7 +237,7 @@ exports.createIfExp = createIfExp;
 exports.isIfExp = isIfExp;
 exports.getIfExp = getIfExp;
 exports.getIfExpBoolExp = getIfExpBoolExp;
-exports.getifExpThenExp = getifExpThenExp;
+exports.getIfExpThenExp = getIfExpThenExp;
 exports.getIfExpElseExp = getIfExpElseExp;
 
 window.SLang.absyn = exports;

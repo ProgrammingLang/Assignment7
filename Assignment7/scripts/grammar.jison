@@ -20,15 +20,23 @@ LETTER		      [a-zA-Z]
 ","                   		      { return 'COMMA'; }
 "~"                             { return 'NEGATIVE'; }
 "=>"                   		      { return 'THATRETURNS'; }
+"==="                           { return 'BOOLEQ'; }
+"="								{ return 'EQ'; }
 "["                             { return 'LBRACKET'; }
 "]"                             { return 'RBRACKET'; }
 "/"                             { return 'DIVIDE'; }
-"==="                           { return 'BOOLEQ'; }
 "%"                             { return 'MOD'; }
+"::"							{ return 'CONS'; }
 ">"                             { return 'GT'; }
 "<"                             { return 'LT'; }
+"let"							{ return 'LET'; }
+"in"							{ return 'IN'; }
+"end"							{ return 'END'; }
+"hd"							{ return 'HD'; }
+"tl" 							{ return 'TL'; }
 "sumlist"                       { return 'SUMLIST'; }
 "not"                           { return 'NOT'; }
+"isNull"						{ return 'ISNULL'; }
 "if"                            { return 'IF'; }
 "then"                          { return 'THEN'; }
 "else"                          { return 'ELSE'; }
@@ -60,6 +68,7 @@ exp
     | prim2_app_exp { $$ = $1; }
     | list_exp      { $$ = $1; }
     | if_exp        { $$ = $1; }
+	| let_exp		{ $$ = $1; }
     ;
 
 var_exp
@@ -109,11 +118,19 @@ prim1_app_exp
         { $$ = SLang.absyn.createPrim1AppExp("+", $3); }
     | NOT LPAREN exp RPAREN
         { $$ = SLang.absyn.createPrim1AppExp("not", $3); }
+	| HD LPAREN list_exp RPAREN
+		{ $$ = SLang.absyn.createPrim1AppExp("hd",$3); }
+	| TL LPAREN list_exp RPAREN
+		{ $$ = SLang.absyn.createPrim1AppExp("tl",$3); }
+	| ISNULL LPAREN list_exp RPAREN
+		{ $$ = SLang.absyn.createPrim1AppExp("isNull",$3); }
     ;
 
 prim2_app_exp
     : LPAREN exp prim2_op exp RPAREN
        { $$ = SLang.absyn.createPrim2AppExp($3,$2,$4); }
+	| LPAREN exp CONS list_exp RPAREN
+		{ $$ = SLang.absyn.createPrim2AppExp("::",$2,$4); }
     ;
 
 prim1_op
@@ -136,6 +153,28 @@ if_exp
     :  IF exp THEN exp ELSE exp
         { $$ = SLang.absyn.createIfExp("if",$2,$4,$6); }
     ;
+
+let_exp
+	: LET bindings IN exp END
+		{  console.log("bindings " + $2);
+			console.log($2[0]);
+			var f = SLang.absyn.createFnExp($2[0],$4);
+			SLang.absyn.createAppExp(f, $2[1]); }
+	;
+
+bindings 
+	: VAR EQ exp 
+	{ 	var a = [$1];
+		var b = [$3];
+		$$ = [a, b]; }
+	| VAR EQ exp bindings
+	{ 	var a = $4[0].push($1);
+		var b = $4[1].push($3);
+		console.log([a, b]);
+		$$ = [a, b];	 }
+		
+	;
+
 args
     : /* empty */ { $$ = [ ]; }
     | exp args

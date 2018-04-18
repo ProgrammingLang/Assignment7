@@ -63,16 +63,28 @@ function applyPrimitive(prim,args) {
       case ">":
         typeCheckPrimitiveOp(prim, args, [E.isNum, E.isNum]);
         return E.createBool( E.getNumValue(args[0]) > E.getNumValue(args[1]));
+	  case "hd":
+		typeCheckPrimitiveOp(prim, args, [E.isList]);
+		return E.createNum(fp.hd(E.getListValue(args[0])));
+	  case "tl":
+		typeCheckPrimitiveOp(prim, args, [E.isList]);
+		return E.createList(fp.tl(E.getListValue(args[0])));
+	  case "::":
+		typeCheckPrimitiveOp(prim, args, [E.isNum, E.isList]);
+		return E.createList(fp.cons(E.getNumValue(args[0]), E.getListValue(args[1])));
+	  case "isNull":
+		typeCheckPrimitiveOp(prim, args, [E.isList]);
+		return E.createBool(fp.isNull(E.getListValue(args[0])));
     }
 }
 
-function applyIf(args){
-  if(E.getBoolValue(args[0])){
-    return E.getNumValue(args[1]);
-  }
-  else {
-    return E.getNumValue(args[2]);
-  }
+function applyIf(prim, args){
+	if(E.getBoolValue(args[0])){
+		return args[1];
+	}
+	else {
+		return args[2];
+	} 
 }
 
 function evalExp(exp,envir) {
@@ -80,17 +92,21 @@ function evalExp(exp,envir) {
     if (A.isIntExp(exp)) {
 	return E.createNum(A.getIntExpValue(exp));
     } else if (A.isListExp(exp)) {
+
 	return E.createList(A.getListExpList(exp));
     }
     else if (A.isVarExp(exp)) {
 	return E.lookup(envir,A.getVarExpId(exp));
     }
     else if (A.isFnExp(exp)) {
+
 	return E.createClo(A.getFnExpParams(exp),A.getFnExpBody(exp),envir);
     }
     else if (A.isAppExp(exp)) {
+
 	var f = evalExp(A.getAppExpFn(exp),envir);
-	var args = A.getAppExpArgs(exp).map( function(arg) { return evalExp(arg,envir); } );
+
+	var args = A.getAppExpArgs(exp).map( function(arg) { console.log(evalExp(arg, envir)); return evalExp(arg,envir); } );
 	if (E.isClo(f)) {
 	    return evalExp(E.getCloBody(f),E.update(E.getCloEnv(f),E.getCloParams(f),args));
 	}
@@ -105,10 +121,9 @@ function evalExp(exp,envir) {
 			      [evalExp(A.getPrim2AppExpArg1(exp),envir),
 			       evalExp(A.getPrim2AppExpArg2(exp),envir)]);
     } else if (A.isIfExp(exp)) {
-        //do something here
         return applyIf(A.getIfExp(exp),
           [evalExp(A.getIfExpBoolExp(exp), envir),
-          evalExp(A.getifExpThenExp(exp), envir), 
+          evalExp(A.getIfExpThenExp(exp), envir), 
           evalExp(A.getIfExpElseExp(exp), envir)]);
     } else {
 	throw "Error: Attempting to evaluate an invalid expression";
