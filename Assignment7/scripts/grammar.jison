@@ -59,7 +59,7 @@ exp
     | prim1_app_exp { $$ = $1; }
     | prim2_app_exp { $$ = $1; }
     | list_exp      { $$ = $1; }
-    | if_exp        { $$ = $; }
+    | if_exp        { $$ = $1; }
     ;
 
 var_exp
@@ -134,7 +134,7 @@ prim2_op
 
 if_exp
     :  IF exp THEN exp ELSE exp
-        { $$ = SLang.absyn.createIfExp("if",$2, $4, $6); }
+        { $$ = SLang.absyn.createIfExp("if",$2,$4,$6); }
     ;
 args
     : /* empty */ { $$ = [ ]; }

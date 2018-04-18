@@ -66,11 +66,17 @@ function applyPrimitive(prim,args) {
     }
 }
 
-function applyIf(prim, args){
-  
+function applyIf(args){
+  if(E.getBoolValue(args[0])){
+    return E.getNumValue(args[1]);
+  }
+  else {
+    return E.getNumValue(args[2]);
+  }
 }
 
 function evalExp(exp,envir) {
+  
     if (A.isIntExp(exp)) {
 	return E.createNum(A.getIntExpValue(exp));
     } else if (A.isListExp(exp)) {
@@ -98,6 +104,12 @@ function evalExp(exp,envir) {
         return applyPrimitive(A.getPrim2AppExpPrim(exp),
 			      [evalExp(A.getPrim2AppExpArg1(exp),envir),
 			       evalExp(A.getPrim2AppExpArg2(exp),envir)]);
+    } else if (A.isIfExp(exp)) {
+        //do something here
+        return applyIf(A.getIfExp(exp),
+          [evalExp(A.getIfExpBoolExp(exp), envir),
+          evalExp(A.getifExpThenExp(exp), envir), 
+          evalExp(A.getIfExpElseExp(exp), envir)]);
     } else {
 	throw "Error: Attempting to evaluate an invalid expression";
     }

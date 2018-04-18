@@ -86,11 +86,8 @@ switch (yystate) {
 case 1:
  return SLang.absyn.createProgram($$[$0-1]); 
 break;
-case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
+case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
  this.$ = $$[$0]; 
-break;
-case 9:
- this.$ = $; 
 break;
 case 10:
  this.$ = SLang.absyn.createVarExp( $$[$0] ); 
@@ -139,7 +136,7 @@ case 21:
  this.$ = SLang.absyn.createPrim2AppExp($$[$0-2],$$[$0-3],$$[$0-1]); 
 break;
 case 32:
- this.$ = SLang.absyn.createIfExp("if",$$[$0-4], $$[$0-2], $$[$0]); 
+ this.$ = SLang.absyn.createIfExp("if",$$[$0-4],$$[$0-2],$$[$0]); 
 break;
 case 36: case 38:
  $$[$0].unshift($$[$0-1]); this.$ = $$[$0]; 

@@ -146,9 +146,11 @@ function getPrim2AppExpArg2(e) {
 }
 
 function createIfExp(prim, boolExp, thenExp, elseExp){
-  return ["IfExp", prim, boolExp, thenExp, elseExp];
+  //console.log(["IfExp", prim, boolExp, thenExp, elseExp]);
+  return ["IfExp",prim,boolExp,thenExp,elseExp];
 }
 function isIfExp(e){
+  console.log(e[0]);
   return e[0] === "IfExp";
 }
 function getIfExp(e) {
