@@ -95,18 +95,18 @@ function evalExp(exp,envir) {
 
 	return E.createList(A.getListExpList(exp));
     }
-    else if (A.isVarExp(exp)) {
+    else if (A.isVarExp(exp)) {		
 	return E.lookup(envir,A.getVarExpId(exp));
     }
     else if (A.isFnExp(exp)) {
-
 	return E.createClo(A.getFnExpParams(exp),A.getFnExpBody(exp),envir);
     }
     else if (A.isAppExp(exp)) {
 
 	var f = evalExp(A.getAppExpFn(exp),envir);
-
-	var args = A.getAppExpArgs(exp).map( function(arg) { console.log(evalExp(arg, envir)); return evalExp(arg,envir); } );
+	
+	var args = A.getAppExpArgs(exp).map( function(arg) { return evalExp(arg,envir); } );
+	
 	if (E.isClo(f)) {
 	    return evalExp(E.getCloBody(f),E.update(E.getCloEnv(f),E.getCloParams(f),args));
 	}

@@ -156,10 +156,8 @@ if_exp
 
 let_exp
 	: LET bindings IN exp END
-		{  console.log("bindings " + $2);
-			console.log($2[0]);
-			var f = SLang.absyn.createFnExp($2[0],$4);
-			SLang.absyn.createAppExp(f, $2[1]); }
+		{   $2[1].unshift("args");
+			$$ = SLang.absyn.createAppExp(SLang.absyn.createFnExp($2[0],$4), $2[1]); }
 	;
 
 bindings 
@@ -168,10 +166,9 @@ bindings
 		var b = [$3];
 		$$ = [a, b]; }
 	| VAR EQ exp bindings
-	{ 	var a = $4[0].push($1);
-		var b = $4[1].push($3);
-		console.log([a, b]);
-		$$ = [a, b];	 }
+	{	var a = $4[0].push($1);
+		var b = $4[1].push($3); 
+		$$ = $4; }
 		
 	;
 

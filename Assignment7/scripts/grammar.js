@@ -151,10 +151,8 @@ case 37:
  this.$ = SLang.absyn.createIfExp("if",$$[$0-4],$$[$0-2],$$[$0]); 
 break;
 case 38:
-  console.log("bindings " + $$[$0-3]);
-			console.log($$[$0-3][0]);
-			var f = SLang.absyn.createFnExp($$[$0-3][0],$$[$0-1]);
-			SLang.absyn.createAppExp(f, $$[$0-3][1]); 
+   $$[$0-3][1].unshift("args");
+			this.$ = SLang.absyn.createAppExp(SLang.absyn.createFnExp($$[$0-3][0],$$[$0-1]), $$[$0-3][1]); 
 break;
 case 39:
  	var a = [$$[$0-2]];
@@ -162,10 +160,9 @@ case 39:
 		this.$ = [a, b]; 
 break;
 case 40:
- 	var a = $$[$0][0].push($$[$0-3]);
-		var b = $$[$0][1].push($$[$0-1]);
-		console.log([a, b]);
-		this.$ = [a, b];	 
+	var a = $$[$0][0].push($$[$0-3]);
+		var b = $$[$0][1].push($$[$0-1]); 
+		this.$ = $$[$0]; 
 break;
 case 44: case 46:
  $$[$0].unshift($$[$0-1]); this.$ = $$[$0]; 
